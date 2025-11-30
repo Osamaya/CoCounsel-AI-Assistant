@@ -1,0 +1,141 @@
+ #chat-container {
+     width: 100%;
+     max-width: 600px;
+     margin: auto;
+     display: flex;
+     flex-direction: column;
+     background: #f8f9fa;
+     border-radius: 10px;
+     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+     padding: 10px;
+ }
+
+ #contenedor-chat {
+     padding: 1rem;
+ }
+
+ #chat-box {
+     height: 400px;
+     overflow-y: auto;
+     border: 1px solid #ccc;
+     padding: 10px;
+     background: white;
+ }
+
+ #messages div {
+     margin-bottom: 10px;
+     padding: 8px;
+     border-radius: 5px;
+ }
+
+ .user-message {
+     background: rgb(29, 138, 255);
+     color: white;
+     align-self: flex-end;
+ }
+
+ .logo {
+     position: relative;
+     bottom: 0;
+     text-align: center;
+ }
+
+ /* Estilo para el texto debajo del logo */
+ .reading-message {
+     font-size: 14px;
+     font-weight: 700;
+     color: rgb(0, 0, 0);
+     text-align: center;
+ }
+
+ .ai-message {
+     background: #e9ecef;
+     color: black;
+ }
+
+ #chat-input {
+     display: flex;
+     margin-top: 10px;
+ }
+
+ #user-message {
+     flex: 1;
+     padding: 8px;
+     border: 1px solid #ccc;
+     border-radius: 5px;
+ }
+
+ button {
+     background: #007bff;
+     color: white;
+     border: none;
+     padding: 8px 12px;
+     margin-left: 5px;
+     cursor: pointer;
+ }
+
+ .dot {
+     animation: blink 1.2s infinite;
+     opacity: 0.3;
+ }
+
+ .dot:nth-child(2) {
+     animation-delay: 0.2s;
+ }
+
+ .dot:nth-child(3) {
+     animation-delay: 0.4s;
+ }
+
+ .custom-table {
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: 10px;
+     font-size: 12px;
+ }
+
+ .custom-table th,
+ .custom-table td {
+     border: 1px solid #ccc;
+     padding: 8px 12px;
+     text-align: left;
+ }
+
+ .custom-table th {
+     background-color: #f0f0f0;
+     font-weight: bold;
+ }
+
+ .glow-border {
+     animation: glowPulse 1.5s ease-out forwards;
+     border: 2px solid #4fd1c5;
+     border-radius: 6px;
+     box-shadow: 0 0 0 rgba(79, 209, 197, 0);
+ }
+
+ @keyframes glowPulse {
+     0% {
+         box-shadow: 0 0 0 rgba(79, 209, 197, 0);
+     }
+
+     50% {
+         box-shadow: 0 0 12px rgba(79, 209, 197, 0.6);
+     }
+
+     100% {
+         box-shadow: 0 0 0 rgba(79, 209, 197, 0);
+     }
+ }
+
+
+ @keyframes blink {
+
+     0%,
+     100% {
+         opacity: 0.3;
+     }
+
+     50% {
+         opacity: 1;
+     }
+ }

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/static/css/chat.css">
+<div id="contenedor-chat">
+    <div class="logo">
+		<img id="logo-chat" src="../../assets/img/favicons/192a.png" alt="Logo" height="80" width="80">
+	</div>
+     <!-- Mensaje debajo del logo -->
+     <div class="reading-message">
+        CocoAI - Our Intelligent Assistant.
+    </div>
+
+    <div id="chat-container">
+        <div id="chat-box">
+            <div id="messages"></div>
+        </div>
+        <div id="chat-input">
+            <input type="text" id="user-message" placeholder="write a message..." autocomplete="off">
+            <button class="btn btn-rounded" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+</div>
+<script src="/static/js/websocket/eventRouter.js"></script>
+<script src="/static/js/websocket/webClientClass.js"></script>
+<script src="/static/js/websocket/webSocketManager.js"></script>
+<script src="/static/js/chat/handlers/chat_handler.js"></script>
+<script src="/static/js/chat/chat.js"></script>
