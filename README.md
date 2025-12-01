@@ -162,7 +162,7 @@ This ensures message traceability and state recovery during testing.
 
 
 ### Tables:
-
+---
 **session_chat** 
 Stores chat sessions per client:
 
@@ -171,7 +171,7 @@ id_session	    Primary key
 sc_client_id	UUID per browser
 sc_status	    active/closed
 sc_created_at	timestamp
-
+---
 **messages_chat**
 Stores user's + AI history:
 
