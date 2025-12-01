@@ -19,7 +19,7 @@ It is designed for technical evaluation, architectural demonstration, and interv
 
 ---
 ## Project Structure Overview
----
+```
 app/
 │ main.py
 │ init.py
@@ -62,6 +62,7 @@ app/
 ├── eventRouter.js
 ├── webClientClass.js
 └── webSocketManager.js
+```
 ---
 
 # INSTALLATION & RUNNING THE PROJECT (WITH uv)
@@ -163,7 +164,7 @@ This ensures message traceability and state recovery during testing.
 
 
 ### Tables:
----
+```
 **session_chat** 
 Stores chat sessions per client:
 
@@ -172,7 +173,7 @@ id_session	    Primary key
 sc_client_id	UUID per browser
 sc_status	    active/closed
 sc_created_at	timestamp
----
+
 **messages_chat**
 Stores user's + AI history:
 
@@ -182,6 +183,7 @@ mc_id_session	FK to session_chat
 mc_sender	    user / ai
 mc_content	    message text
 mc_created_at	timestamp
+```
 ---
 
 ### UI Design Notes
