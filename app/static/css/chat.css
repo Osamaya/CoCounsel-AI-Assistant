@@ -53,6 +53,20 @@
      color: black;
  }
 
+ /* Fade-in animation para la respuesta */
+  .fade-in {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 0.4s forwards;
+  }
+
+  @keyframes fadeIn {
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
  #chat-input {
      display: flex;
      margin-top: 10px;

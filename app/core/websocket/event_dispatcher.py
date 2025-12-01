@@ -36,16 +36,16 @@ class EventDispatcher:
             logger.warning(f"⚠️ No hay handler para canal '{channel}' (mensaje de cliente).")
 
     @classmethod
-    async def emit(cls, message: Dict[str, Any], target_user_id: Optional[str] = None):
+    async def emit(cls, message: Dict[str, Any], target_client: Optional[str] = None):
         """
         Método de ALTO NIVEL para que los servicios envíen mensajes.
         Decide si es dirigido (target_user_id) o por canal (Pub/Sub).
         """
         channel = message.get("channel")
         
-        if target_user_id:
+        if target_client:
             # Opción 1: Mensaje dirigido a un único usuario (ej. notificaciones privadas)
-            await ws_manager.send_to_user(target_user_id, message)
+            await ws_manager.send_to_user(target_client, message)
         
         elif channel:
             # Opción 2: Mensaje dirigido por canal (Pub/Sub: solo a suscritos)

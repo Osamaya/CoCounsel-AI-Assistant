@@ -1,32 +1,36 @@
-from datetime import datetime
-from functools import lru_cache,partial
-from fastapi.responses import JSONResponse, StreamingResponse, FileResponse
+from fastapi.responses import  FileResponse
 from fastapi.staticfiles import StaticFiles
-import uvicorn
 import logging
-import os
-from fastapi import Depends, File, Form, HTTPException, FastAPI, APIRouter,BackgroundTasks, Request, UploadFile
+from fastapi import FastAPI
 from pathlib import Path
-from pydantic import BaseModel
+from contextlib import asynccontextmanager
+import asyncio
 
-from concurrent.futures import ThreadPoolExecutor
-executor = ThreadPoolExecutor(max_workers=2)
+#Importamos el agente
+from app.services.ai_agent import run_ai_agent
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    #Arrancamos el agente el el background
+    ai_tasks = asyncio.create_task(run_ai_agent())
+    print("Iniciando el servicio AGENTE")
+    yield
+    
+    ai_tasks.cancel()
+    print("Servicio detenido")
 
-# Importa la función que necesites
 logger = logging.getLogger(__name__)
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 # --- SERVIR STATIC ---
 BASE_DIR = Path(__file__).resolve().parent
-print(BASE_DIR)
+
 app.mount(
     "/static",
     StaticFiles(directory=BASE_DIR / "static"),
     name="static"
 )
-
 
 # Servir index.html como homepage
 @app.get("/")

@@ -1,3 +1,15 @@
+async function getChatMessaes(clientId)
+{
+    const response = await fetch(`http://localhost:8000/ws/get-messages-user/${clientId}`, {
+        method: "GET",
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
+        // body: JSON.stringify(record)
+    });
+    let respuesta = await response.json();
+    renderChatHistory(respuesta.messages)
+}
+
 function sendMessage() {
     let message = document.getElementById("user-message").value;
     if (!message.trim()) return;
@@ -40,12 +52,25 @@ function sendMessage() {
 }
 
 
+function getOrCreateClientId() {
+    let clientId = localStorage.getItem("client_id");
+    if (!clientId) {
+        clientId = crypto.randomUUID();
+        localStorage.setItem("client_id", clientId);
+    }
+    return clientId;
+}
+
+/**Iniciamos la conexión a websockets y los handlers de eventos del chat */
 async function initWebSocket()
 {
     try {
         /**Creamos aparte la instancia de nuestro websocket con el backend */
-        await window.WebSocketManager.init(null);
+        const clientId = getOrCreateClientId();
+        console.log(`Soy el cliente id ${clientId}`)
+        await window.WebSocketManager.init(null,clientId);
         window.initChatHandlers()
+        await getChatMessaes(clientId)
         // Suscripción global para logs o debug
     } catch (error) {
         console.error(`No se pudo establecer conexión ${error}`)
@@ -58,4 +83,43 @@ async function initWebSocket()
 })()
 
 
+async function renderChatHistory(messages) {
+    const chatBox = document.getElementById("messages");
+    
+    // Limpiamos cualquier mensaje previo
+    chatBox.innerHTML = "";
 
+    for (const msg of messages) {
+        const msgDiv = document.createElement("div");
+
+        // Clase dependiendo del remitente
+        msgDiv.className = msg.sender === "user" ? "user-message" : "ai-message fade-in";
+
+        // Contenido
+        if (msg.sender === "ai") {
+            msgDiv.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <img src="/assets/img/favicons/192c.png" alt="Bot" style="width: 30px; height: 30px; margin-right: 8px;">
+                    <span>${msg.content}</span>
+                </div>
+            `;
+        } else {
+            msgDiv.textContent = msg.content;
+        }
+
+        chatBox.appendChild(msgDiv);
+
+        // Scroll al final
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
+
+//Eventos
+const inputField = document.getElementById("user-message");
+inputField.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault(); // Evita saltos de línea
+        sendMessage();
+    }
+});

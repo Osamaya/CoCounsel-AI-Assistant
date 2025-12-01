@@ -7,7 +7,7 @@
             this.router = new EventRouter(); 
         }
 
-        init(authToken) {
+        init(authToken,clientId) {
             if (this.client) return; // Ya inicializado
 
             this.client = new WebSocketClient(
@@ -15,7 +15,8 @@
                 authToken,
                 // (data) => this.notifySubscribers(data),
                 (data) => this.handleIncoming(data),
-                (status, reconnecting, color) => this.handleStatus(status, reconnecting, color)
+                (status, reconnecting, color) => this.handleStatus(status, reconnecting, color),
+                clientId
             );
 
             this.client.connect();
@@ -23,7 +24,6 @@
 
         handleIncoming(raw) {
             try {
-                console.log('llegamos aqui?')
                 // Normalizamos el mensaje
                 const normalized = {
                     channel: raw.channel, // o el canal global si no viene

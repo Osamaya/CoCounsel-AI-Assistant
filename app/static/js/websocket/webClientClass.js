@@ -4,13 +4,14 @@
         /**
          * Cliente genérico de WebSocket con lógica de reconexión y manejo de errores.
          * @param {string} endpoint - La sub-ruta del WS (ej: '/trazabilidad').
+         * @param {string} clientId - Id del cliente generado para la sesión del usuario.
          * @param {string} authToken - El token JWT para autenticación (se envía en el query param).
          * @param {function} onDataReceived - Callback para manejar mensajes de datos recibidos (Lógica de UI).
          * @param {function} onStatusChange - Callback para notificar cambios de estado (Lógica de UI).
          */
-        constructor(endpoint, authToken, onDataReceived, onStatusChange) {
+        constructor(endpoint, authToken, onDataReceived, onStatusChange,clientId) {
             // Aquí se adjunta el token JWT para la validación en el Back-End
-            this.url = `ws://localhost:8000/ws${endpoint}`;
+            this.url = `ws://localhost:8000/ws${endpoint}?client_id=${clientId}`;
             this.onDataReceived = onDataReceived;
             this.onStatusChange = onStatusChange;
             this.socket = null;
