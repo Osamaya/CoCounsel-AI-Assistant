@@ -5,7 +5,6 @@ from fastapi import WebSocket
 
 # Import Manager for sending messages (output functionality)
 from app.core.websocket.ws_manager import ws_manager
-from app.core.websocket.suscription_manager import subscription_manager 
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -49,13 +48,10 @@ class EventDispatcher:
             await ws_manager.send_to_user(target_client, message)
         
         elif channel:
-            # Option 2: Channel Pub/Sub (Broadcast to all subscribers of a channel)
-            user_ids = subscription_manager.get_users_for_channel(channel)
-            if user_ids:
-                await ws_manager.send_to_channel_users(user_ids, message)
-            else:
-                logger.warning(f"Emit fallido: Canal '{channel}' existe, pero nadie está suscrito.")
-
-        else:
-            # Option 3: Global Broadcast (Rarely used)
-            await ws_manager.broadcast(message)
+            print(f"Connected by the channel {channel}")
+            # Option 2: Channel Pub/Sub (Broadcast to all subscribers of a channel) I delete this solution because we wouldn't need it
+            # user_ids = subscription_manager.get_users_for_channel(channel)
+            # if user_ids:
+                # await ws_manager.send_to_channel_users(user_ids, message)
+            # else:
+                # logger.warning(f"Emit fallido: Canal '{channel}' existe, pero nadie está suscrito.")
