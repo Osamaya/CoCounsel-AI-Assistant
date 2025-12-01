@@ -187,10 +187,11 @@ mc_created_at	timestamp
 ---
 ### UI Design Notes
 The project uses a Thomson Reuters–inspired color palette, including:
-
+```
 Color	         Example Use
 #d64000	    Primary accent
 #00b7c2;       button
+```
 ---
 ## License & Disclaimers
 
