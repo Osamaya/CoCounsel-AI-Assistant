@@ -185,14 +185,13 @@ mc_content	    message text
 mc_created_at	timestamp
 ```
 ---
-
 ### UI Design Notes
 The project uses a Thomson Reuters–inspired color palette, including:
 
 Color	         Example Use
 #d64000	    Primary accent
 #00b7c2;       button
-
+---
 ## License & Disclaimers
 
 **The project is educational and non-commercial.*
@@ -205,6 +204,6 @@ AI tools were used as support for:
 -Documentation assistance
 
 This project is not affiliated with any commercial entity.
-
+---
 All intellectual property belongs to their respective owners.
 ---
