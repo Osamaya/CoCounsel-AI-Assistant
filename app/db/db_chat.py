@@ -2,40 +2,18 @@ import sqlite3
 DB_PATH = "app/db/chat.db"
 
 def get_db():
+    """Return a SQLite connection object."""
     return sqlite3.connect(DB_PATH)
 
-# def init_db():
-#     conn = sqlite3.connect(DB_PATH)
-#     cursor = conn.cursor()
-#     cursor.executescript("""
-#         CREATE TABLE IF NOT EXISTS session_chat (
-#             id_session INTEGER PRIMARY KEY AUTOINCREMENT,
-#             sc_client_id TEXT NOT NULL,
-#             sc_created_at TEXT DEFAULT (datetime('now')),
-#             sc_status TEXT DEFAULT 'active'
-#         );
-
-#         CREATE TABLE IF NOT EXISTS messages_chat (
-#             id_message INTEGER PRIMARY KEY AUTOINCREMENT,
-#             mc_id_session INTEGER NOT NULL,
-#             mc_sender TEXT NOT NULL,
-#             mc_content TEXT NOT NULL,
-#             mc_created_at TEXT DEFAULT (datetime('now')),
-#             FOREIGN KEY (mc_id_session) REFERENCES session_chat(id_session) ON DELETE CASCADE
-#         );
-#     """)
-#     conn.commit()
-#     conn.close()
-
-# # ---Funciones auxiliares ---
+"""Get an active session for a client or create one if it doesn't exist."""
 def get_sessions_or_create(client_id: str) -> int:
     db = get_db()
     cursor = db.cursor()
     
     cursor.execute("""
-                        SELECT id_session 
-                        FROM session_chat 
-                        WHERE sc_client_id = ? AND sc_status = 'active'
+                    SELECT id_session 
+                    FROM session_chat 
+                    WHERE sc_client_id = ? AND sc_status = 'active'
                     """,(
                             client_id,
                         )
@@ -45,7 +23,8 @@ def get_sessions_or_create(client_id: str) -> int:
     if row:
         session_id = row[0]
     else:
-        cursor.execute("""INSERT 
+        cursor.execute("""
+                        INSERT 
                             INTO session_chat (sc_client_id) 
                             VALUES (?)
                         """,(
@@ -58,13 +37,20 @@ def get_sessions_or_create(client_id: str) -> int:
     db.close()
     return session_id
 
+"""Save a message in the database for a given session.
+    Parameters:
+    - session_id (int): ID of the chat session.
+    - sender (str): 'user' or 'ai' indicating who sent the message.
+    - content (str): The text content of the message.
+"""
 def save_message(session_id: int, sender: str, content: str):
     db = get_db()
     cursor = db.cursor()
     
     cursor.execute(
             """
-                INSERT INTO messages_chat 
+                INSERT 
+                    INTO messages_chat 
                     (
                         mc_id_session, 
                         mc_sender, 
@@ -79,7 +65,17 @@ def save_message(session_id: int, sender: str, content: str):
     )
     db.commit()
     db.close()
-
+    
+"""
+    Retrieve all messages for the active session of a given client.
+    
+    Parameters:
+    - client_id (str): Unique identifier of the client.
+    
+    Returns:
+    - dict: {"messages": [{"sender": str, "content": str, "created_at": str}, ...]}
+            An empty list if no active session exists.
+"""
 def get_user_messages(client_id : str):
     db = get_db()
     cursor = db.cursor()

@@ -1,0 +1,9 @@
+[project]
+name = "cocounsel-ai-assistant"
+version = "0.1.0"
+description = "Our ai assistant"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.123.0",
+]

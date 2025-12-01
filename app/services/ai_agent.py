@@ -6,14 +6,14 @@ from app.core.websocket.event_dispatcher import EventDispatcher
 from app.db.db_chat import *
 logger = logging.getLogger(__name__)
 
-# --- TU LÓGICA DE CEREBRO (MOCK) ---
+# --- MOCK AI LOGIC (RULES-BASED) ---
 def generate_mock_ai_response(user_text: str) -> str:
     """
         Generates a simulated response for a CoCounsel (Mock AI) using
         simple keyword-based rules and response templates.
 
         NOTE:
-        The structure and ideas for this mock were inspired by AI-assisted
+        The structure and ideas for this mock were inspired by AI-assisted (chatgpt)
         brainstorming, but the final implementation and domain adaptation
         were customized for this project.
     """
@@ -65,7 +65,8 @@ def generate_mock_ai_response(user_text: str) -> str:
     for trigger, response in rules:
         if trigger in text:
             return random.choice(response)
-
+        
+    # Fallback response for unhandled input
     fallback_responses = [
         "Sorry, I didn t understand your query. Could you provide more details?",
         "I m not sure how to assist with that. Could you rephrase your question?",
@@ -74,34 +75,36 @@ def generate_mock_ai_response(user_text: str) -> str:
     
     return random.choice(fallback_responses)
 
-# --- EL LOOP DEL AGENTE (EL CHEF) ---
+# --- AI AGENT LOOP (The Consumer) ---
 async def run_ai_agent():
-    logger.info("🤖 AI Agent (Mock) iniciado y esperando eventos...")
+    """
+        The main Consumer loop. Runs indefinitely in the background (via lifespan).
+    """
+    logger.info("Agent initialized and awaiting...")
     
     while True:
-        logger.info("Entré al loop del agente")
-        # 1. Esperar (bloquea aquí hasta que el Handler ponga algo en la cola)
+        logger.info("Inside the agent's loop")
+        
+        # Block and consume event from the Event Bus (asyncio.Queue)
         event = await event_bus.consume_ai_event()
         
         try:
-            # Desempaquetamos el evento que mandó el Handler
             client_id = event.get("client_id")
             user_text = event.get("text")
             
-            logger.info(f"🤖 AI procesando para cliente {client_id}: {user_text}")
-
-            # 2. "Pensar" (Usamos tu función)
-            # Simulamos un pequeño delay para que parezca real
+            # "Thinking"
+            # Process: Simulate AI latency (key to proving asynchronicity)
+            #We manage it within the front end.
             await asyncio.sleep(1.5) 
             
             response_text = generate_mock_ai_response(user_text)
 
-            # 3. Guardar respuesta en DB (Persistencia)
-            # TODO: Aquí llamarías a tu función save_message_to_db(client_id, response_text, "ai")
+            # Persistence: Save AI response to DB (Uses provided persistence functions)
+            """I used SQLITE to make the persistence"""
             session_id = get_sessions_or_create(client_id)
             save_message(session_id, "ai", response_text)
             
-            # 4. Responder al cliente específico
+            # Respond: Use the Event Dispatcher to send the directed message
             payload = {
                 "channel" : "chat",
                 "type": "AI_MESSAGE",
@@ -111,12 +114,11 @@ async def run_ai_agent():
                 }
             }
             
-            # Usamos el manager para enviar solo a este usuario
-            # await ws_manager.send_to_user(client_id, payload)
+            # The AI Agent emits a message back via the central Mediator/Dispatcher.
             await EventDispatcher.emit(payload,target_client=client_id)
             
         except Exception as e:
-            logger.error(f"❌ Error en AI Agent Loop: {e}")
+            logger.error(f"Error in AI Agent Loop: {e}")
         
-        # Avisamos a la cola que terminamos esta tarea
+        # Signal the queue that the task is complete
         event_bus.ai_queue.task_done()

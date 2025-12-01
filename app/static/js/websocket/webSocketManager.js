@@ -1,22 +1,29 @@
-// clases/websockets/WebSocketManager.js
 (function () {
+    /**
+         * Pattern: Facade / Singleton
+         * Acts as the public interface for the frontend (chat.js)
+         * Initializes EventRouter (Mediator) and WebSocketClient (Network)
+         * and normalizes messages before dispatching.
+         * Allows frontend modules to subscribe to events without creating multiple WS connections.
+     */
     class WebSocketManager {
         constructor() {
             this.client = null;
-            // this.subscribers = new Set();
-            this.router = new EventRouter(); 
+            this.router = new EventRouter(); // Mediator for UI event handlers
         }
 
-        init(authToken,clientId) {
-            if (this.client) return; // Ya inicializado
+        /**
+         * Initialize WebSocket client and connect
+         * @param {string} clientId - Client ID for session
+         */
+        init(clientId) {
+            if (this.client) return; // Aseguramos el Singleton
 
             this.client = new WebSocketClient(
-                "/connect",
-                authToken,
-                // (data) => this.notifySubscribers(data),
-                (data) => this.handleIncoming(data),
+                "/connect", // Endpoint WS
+                (data) => this.handleIncoming(data), // Callback para mensajes recibidos
                 (status, reconnecting, color) => this.handleStatus(status, reconnecting, color),
-                clientId
+                clientId // ID de sesión generado en el cliente
             );
 
             this.client.connect();
@@ -24,43 +31,45 @@
 
         handleIncoming(raw) {
             try {
-                // Normalizamos el mensaje
+                /**
+                 *  Normalize incoming messages and dispatch to router -> 'channel', 'type' y 'payload'. 
+                 * @param {Object} raw - Object that contains the response from our backend.
+                 */
                 const normalized = {
-                    channel: raw.channel, // o el canal global si no viene
+                    channel: raw.channel,
                     type: raw.type || raw.event,
                     payload: raw.payload || raw.data || {},
                 };
-                console.log(normalized);
-                // Despachamos al router
+                // Despachamos al router para que los Handlers suscritos reaccionen.
                 this.router.dispatch(normalized);
             } catch (err) {
-                console.error("❌ Error procesando mensaje WS:", err);
+                console.error("Error processing WS message:", err);
             }
         }
 
+        /** Handle connection status updates */
         handleStatus(status, reconnecting, color) {
             console.log(`[WS STATUS] ${status}`);
-            // Aquí podrías actualizar un indicador global o disparar un evento UI
         }
 
+         /** Send message to WebSocket server */
         send(data) {
             if (this.client) this.client.send(data);
         }
 
+        /** Disconnect WebSocket client */
         disconnect() {
             if (this.client) this.client.disconnect();
         }
 
-        // API de conveniencia → redirige al router
+        // Convenience methods for frontend subscriptions
         onChannel(channel, cb) { this.router.onChannel(channel, cb); }
         onType(type, cb) { this.router.onType(type, cb); }
         onAll(cb) { this.router.onAll(cb); }
     }
 
-    //Creamos la instancia y exportamos globalmente
+    // Create singleton instance
     const instance = new WebSocketManager();
     window.WebSocketManager = instance;
-    // window.WebSocketManager = WebSocketManager
 })();
-// const wsManager = new WebSocketManager();
 

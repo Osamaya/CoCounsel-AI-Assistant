@@ -29,7 +29,7 @@
  }
 
  .user-message {
-     background: rgb(29, 138, 255);
+     background: #d64000;
      color: white;
      align-self: flex-end;
  }
@@ -54,18 +54,18 @@
  }
 
  /* Fade-in animation para la respuesta */
-  .fade-in {
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeIn 0.4s forwards;
-  }
-
-  @keyframes fadeIn {
-      to {
-          opacity: 1;
-          transform: translateY(0);
-      }
-  }
+ .fade-in {
+     opacity: 0;
+     transform: translateY(10px);
+     animation: fadeIn 0.4s forwards;
+ }
+ 
+ @keyframes fadeIn {
+     to {
+         opacity: 1;
+         transform: translateY(0);
+     }
+ }
 
  #chat-input {
      display: flex;
@@ -80,12 +80,13 @@
  }
 
  button {
-     background: #007bff;
+     background: #00b7c2;
      color: white;
      border: none;
      padding: 8px 12px;
      margin-left: 5px;
      cursor: pointer;
+     border-radius: 1rem;
  }
 
  .dot {
@@ -99,25 +100,6 @@
 
  .dot:nth-child(3) {
      animation-delay: 0.4s;
- }
-
- .custom-table {
-     width: 100%;
-     border-collapse: collapse;
-     margin-top: 10px;
-     font-size: 12px;
- }
-
- .custom-table th,
- .custom-table td {
-     border: 1px solid #ccc;
-     padding: 8px 12px;
-     text-align: left;
- }
-
- .custom-table th {
-     background-color: #f0f0f0;
-     font-weight: bold;
  }
 
  .glow-border {
