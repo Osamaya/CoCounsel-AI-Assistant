@@ -19,6 +19,7 @@ It is designed for technical evaluation, architectural demonstration, and interv
 
 ---
 ## Project Structure Overview
+---
 app/
 │ main.py
 │ init.py
