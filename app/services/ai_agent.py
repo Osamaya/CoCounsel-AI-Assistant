@@ -110,7 +110,7 @@ async def run_ai_agent():
                 "type": "AI_MESSAGE",
                 "payload": {
                     "text": response_text,
-                    "timestamp": "now" # Puedes poner datetime.now().isoformat()
+                    "timestamp": "now"
                 }
             }
             
