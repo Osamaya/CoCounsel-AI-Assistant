@@ -73,11 +73,15 @@ Using powershell (don't use pip, because it won't add the route to the PATH caus
 
 
 **Verify that you can execute scripts within powershel first, if not, use the command below**
+
+
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 
 
 After this then you can run the following command
+
+
 powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 ### 2. Create virtual environment
