@@ -70,10 +70,10 @@ This project uses **uv** for fast Python dependency and environment management.
 
 ### 1. Install uv (if not installed)
 Using powershell (don't use pip, because it won't add the route to the PATH causing more trouble)
-**Verify that you can execute scripts within powershel first, if not, use the command below*
--Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+**Verify that you can execute scripts within powershel first, if not, use the command below**
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 After this then you can run the following command
--powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 ### 2. Create virtual environment
 uv venv
