@@ -29,11 +29,11 @@ async def handle_chats_event(websocket: WebSocket, message: dict):
     if tipo == "NEW_USER_MESSAGE":
         user_text = payload.get("text")
         
-        # TODO: Persistencia (Guardar el mensaje de entrada en SQLite)
+        # TODO: Persistencia (Guardamos el mensaje de entrada en SQLite)
         session_id = get_sessions_or_create(client_id)
         save_message(session_id, "user",  user_text)
         
-        #Publicar al Event Bus
+        #Publicamos al Event Bus
         event_payload = {
             "type": "PROCESS_AI_REQUEST", 
             "client_id": client_id,
@@ -42,7 +42,7 @@ async def handle_chats_event(websocket: WebSocket, message: dict):
         }
         
         await event_bus.publish_to_ia(event_payload)
-        # La función termina aquí inmediatamente.
+       
         
     else:
         print(f"Event type '{tipo}' unmanaged by the handler CHAT.")
