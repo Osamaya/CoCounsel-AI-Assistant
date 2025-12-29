@@ -98,7 +98,7 @@ source .venv/Scripts/activate
 uv sync
 
 ### 5. RUN
-uvicorn app.main:app --reload
+uv run uvicorn app.main:app --reload
 
 ### 6. OPEN
 http://localhost:8000/
